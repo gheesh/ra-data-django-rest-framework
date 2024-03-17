@@ -61,8 +61,8 @@ export default (
       const { json } = await httpClient(url);
 
       return {
-        data: json.results,
-        total: json.count,
+        data: json,
+        total: json.length,
       };
     },
 
@@ -90,8 +90,8 @@ export default (
 
       const { json } = await httpClient(url);
       return {
-        data: json.results,
-        total: json.count,
+        data: json,
+        total: json.length,
       };
     },
 
@@ -118,9 +118,7 @@ export default (
         method: 'POST',
         body: JSON.stringify(params.data),
       });
-      return {
-        data: { ...json },
-      };
+      return { data: json };
     },
 
     delete: (resource, params) =>
