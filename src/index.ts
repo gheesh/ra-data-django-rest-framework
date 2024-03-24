@@ -60,14 +60,24 @@ export default (
 
       const { json } = await httpClient(url);
 
+      // Case for non-paginated response
+      if (!json.hasOwnProperty('count')) {
+        return {
+          data: json,
+          total: json.length,
+        };
+      }
+
+      // Paginated (normal) response
       return {
-        data: json,
-        total: json.length,
+        data: json.results,
+        total: json.count,
       };
     },
 
     getOne: async (resource, params) => {
       const data = await getOneJson(resource, params.id);
+
       return {
         data,
       };
@@ -89,9 +99,19 @@ export default (
       const url = `${apiUrl}/${resource}/?${stringify(query)}`;
 
       const { json } = await httpClient(url);
+
+      // Case for non-paginated response
+      if (!json.hasOwnProperty('count')) {
+        return {
+          data: json,
+          total: json.length,
+        };
+      }
+
+      // Paginated (normal) response
       return {
-        data: json,
-        total: json.length,
+        data: json.results,
+        total: json.count,
       };
     },
 
