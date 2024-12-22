@@ -19,6 +19,7 @@ function tokenAuthProvider(options: Options = {}): AuthProvider {
       const response = await fetch(request);
       if (response.ok) {
         localStorage.setItem('token', (await response.json()).token);
+        localStorage.setItem('user', username);
         return;
       }
       if (response.headers.get('content-type') !== 'application/json') {
@@ -31,6 +32,7 @@ function tokenAuthProvider(options: Options = {}): AuthProvider {
     },
     logout: () => {
       localStorage.removeItem('token');
+      localStorage.removeItem('user');
       return Promise.resolve();
     },
     checkAuth: () =>
@@ -39,12 +41,16 @@ function tokenAuthProvider(options: Options = {}): AuthProvider {
       const status = error.status;
       if (status === 401 || status === 403) {
         localStorage.removeItem('token');
+        localStorage.removeItem('user');
         return Promise.reject();
       }
       return Promise.resolve();
     },
     getPermissions: () => {
       return Promise.resolve();
+    },
+    getUser: () => {
+      return localStorage.getItem('user');
     },
   };
 }
